@@ -1,6 +1,8 @@
 <template>
   <div class="home">
-   <div class="list-unstyled" v-for="message in messages" :key="message._id">
+    <button @click="showMessageForm = !showMessageForm" type="button" class="btn btn-info mt-2">Message Form</button>
+    <Form v-if="showMessageForm" />
+   <div class="list-unstyled mt-4" v-for="message in reversedMessages" :key="message._id">
      <li class="media">
        <img v-if="message.imageURL" :src="message.imageURL" :alt="message.subject" class="mr-3">
        <div class="media-body">
@@ -18,11 +20,16 @@
 <script>
 // @ is an alias to /src
 const API_URL = 'http://localhost:3000/messages'; 
-
+import Form from '@/components/Form.vue'
 export default {
   name: 'home',
+  components:{
+    Form
+  },
   data: () => ({
-    messages : []
+    messages : [],
+    showMessageForm : false
+    
   }),
   mounted() {
     fetch(API_URL)
@@ -30,7 +37,13 @@ export default {
       .then(result => {
        this.messages = result
       })
+  },
+  computed : {
+    reversedMessages(){
+      return this.messages.slice().reverse();
+    }
   }
+  
 };
 </script>
 <style scoped>
